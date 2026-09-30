@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Unofficial 100-question practice paper for the Cambodian DES entrance exam (Oncology), French and English.">
+<title>DES Oncology Mock Exam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,650&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: exam booklet on the left, optical answer sheet (bubble grid A–E) on the right; stacks on phones. */
+:root{
+  --paper:#f6f7f4; --sheet:#ffffff; --ink:#1c2230; --muted:#5b6473; --line:#d8dcd5;
+  --omr:#c4452f; --omr-soft:#f8e6e1; --ok:#2e7d4f; --ok-soft:#e2f1e7; --bad:#b4232f; --bad-soft:#f8e1e3;
+  --flag:#a86b12; --flag-soft:#f7ecd6; --focus:#2458c6;
+  --f-display:"Newsreader",Georgia,"Times New Roman",serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#14171d; --sheet:#1b1f27; --ink:#e7e9ee; --muted:#9aa2b1; --line:#2f3541;
+  --omr:#ef7a5f; --omr-soft:#3a2420; --ok:#62c18a; --ok-soft:#1d3226; --bad:#f07682; --bad-soft:#3b1f24;
+  --flag:#e2ac52; --flag-soft:#3a2f1a; --focus:#7aa2ff; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#14171d; --sheet:#1b1f27; --ink:#e7e9ee; --muted:#9aa2b1; --line:#2f3541;
+  --omr:#ef7a5f; --omr-soft:#3a2420; --ok:#62c18a; --ok-soft:#1d3226; --bad:#f07682; --bad-soft:#3b1f24;
+  --flag:#e2ac52; --flag-soft:#3a2f1a; --focus:#7aa2ff; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:15px/1.55 var(--f-body);margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:24px 64px}
+h1,h2,h3{font-family:var(--f-display);font-weight:650;text-wrap:balance;margin:0;line-height:1.15}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.eyebrow{font:600 11px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--omr)}
+.muted{color:var(--muted)}
+.btn{border:1px solid var(--ink);background:var(--ink);color:var(--sheet);padding:10px 18px;border-radius:6px;cursor:pointer;font-weight:600}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:hover:not(:disabled){filter:brightness(1.08)}
+
+/* Start screen */
+.cover{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:32px;align-items:start}
+.cover h1{font-size:clamp(34px,5vw,52px);margin-block:10px 14px}
+.cover .lede{font-size:17px;max-width:62ch}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:22px}
+.facts div{background:var(--sheet);padding:12px 14px}
+.facts b{display:block;font:600 20px/1.2 var(--f-mono);font-variant-numeric:tabular-nums}
+.facts span{font-size:12.5px;color:var(--muted)}
+.panel{background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:20px;display:grid;gap:16px}
+.panel label{font-weight:600;font-size:13px;display:block;margin-bottom:6px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{border:1px solid var(--line);background:transparent;padding:7px 12px;border-radius:999px;cursor:pointer;font-size:13.5px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--sheet);border-color:var(--ink)}
+.note{font-size:13px;color:var(--muted);border-left:3px solid var(--omr);padding-left:12px}
+.blueprint{margin-top:26px}
+.blueprint table{width:100%;border-collapse:collapse;font-size:14px}
+.blueprint th,.blueprint td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+.blueprint td.n{font-family:var(--f-mono);text-align:right;font-variant-numeric:tabular-nums}
+
+/* Exam screen */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--line);margin-inline:-20px;padding:10px 20px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.timer{font:600 22px/1 var(--f-mono);font-variant-numeric:tabular-nums;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:var(--sheet)}
+.timer.low{color:var(--bad);border-color:var(--bad)}
+.progress{font:500 13px var(--f-mono);color:var(--muted)}
+.exam{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:28px;margin-top:22px;align-items:start}
+.qcard{background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:26px}
+.qmeta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+.chip{font:600 11px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:5px 8px;border-radius:4px;border:1px solid var(--line);color:var(--muted)}
+.chip.lang{color:var(--omr);border-color:var(--omr)}
+.qnum{font:600 13px var(--f-mono);color:var(--ink)}
+.stem{font-family:var(--f-display);font-size:20px;line-height:1.45;font-weight:500;max-width:68ch;margin-bottom:20px}
+.opts{display:grid;gap:8px}
+.opt{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;align-items:start;text-align:left;border:1px solid var(--line);background:transparent;border-radius:8px;padding:11px 12px;cursor:pointer}
+.opt:hover{border-color:var(--ink)}
+.bub{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--omr);display:grid;place-items:center;font:600 13px var(--f-mono);color:var(--omr)}
+.opt[aria-checked="true"]{border-color:var(--ink)}
+.opt[aria-checked="true"] .bub{background:var(--ink);border-color:var(--ink);color:var(--sheet)}
+.opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+.opt.correct .bub{background:var(--ok);border-color:var(--ok);color:var(--sheet)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt.wrong .bub{background:var(--bad);border-color:var(--bad);color:var(--sheet)}
+.opt[disabled]{cursor:default}
+.explain{margin-top:18px;padding:14px 16px;border-radius:8px;background:var(--paper);border:1px solid var(--line);font-size:14.5px}
+.explain .src{margin-top:8px;font-size:12.5px;color:var(--muted)}
+.qnav{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;margin-top:20px}
+.flagbtn[aria-pressed="true"]{border-color:var(--flag);color:var(--flag);background:var(--flag-soft)}
+
+/* Answer sheet */
+.sheetbox{background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:16px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 70px);max-height:calc(100vh - 100px);overflow:auto}
+.sheetbox h3{font-size:17px;margin-bottom:4px}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:11.5px;color:var(--muted);margin:8px 0 12px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:-1px}
+.secl{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(34px,1fr));gap:5px}
+.cell{height:32px;border:1px solid var(--line);border-radius:5px;background:transparent;font:500 12px var(--f-mono);cursor:pointer;font-variant-numeric:tabular-nums;position:relative}
+.cell.ans{background:var(--ink);color:var(--sheet);border-color:var(--ink)}
+.cell.cur{outline:2px solid var(--omr);outline-offset:1px}
+.cell.flag::after{content:"";position:absolute;top:2px;right:2px;width:6px;height:6px;border-radius:50%;background:var(--flag)}
+.cell.r-ok{background:var(--ok);color:var(--sheet);border-color:var(--ok)}
+.cell.r-bad{background:var(--bad);color:var(--sheet);border-color:var(--bad)}
+.cell.r-skip{background:var(--paper);color:var(--muted);border-style:dashed}
+
+/* Results */
+.score{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-top:18px}
+.score div{background:var(--sheet);border:1px solid var(--line);border-radius:8px;padding:14px}
+.score b{display:block;font:600 28px/1.1 var(--f-mono);font-variant-numeric:tabular-nums}
+.score span{font-size:12.5px;color:var(--muted)}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:var(--omr)}
+.gpa{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.gpa input{width:90px;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--sheet);color:var(--ink);font:500 15px var(--f-mono)}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin:22px 0 12px}
+.review{display:grid;gap:14px}
+.rv{background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:18px;border-left:4px solid var(--line)}
+.rv.ok{border-left-color:var(--ok)} .rv.bad{border-left-color:var(--bad)} .rv.skip{border-left-color:var(--muted)}
+.rv .stem{font-size:17px;margin-bottom:10px}
+.rv ol{margin:0;padding-left:0;list-style:none;display:grid;gap:4px;font-size:14px}
+.rv li{padding:4px 8px;border-radius:5px}
+.rv li.c{background:var(--ok-soft);color:var(--ink);font-weight:600}
+.rv li.y{background:var(--bad-soft)}
+.confirm{background:var(--flag-soft);border:1px solid var(--flag);border-radius:8px;padding:14px;margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+footer{margin-top:40px;font-size:12.5px;color:var(--muted);max-width:80ch}
+
+@media (max-width:860px){
+  .cover{grid-template-columns:1fr}
+  .exam{grid-template-columns:1fr}
+  .sheetbox{position:static;max-height:none}
+  .stem{font-size:18px}
+  .qcard{padding:18px}
+}
+@media (prefers-reduced-motion:no-preference){.opt,.cell{transition:background .15s,border-color .15s}}
+[hidden]{display:none!important}
+img{max-width:100%}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+/* ---------- QUESTION BANK ---------- */
+const Q = [
+// ---- PART A · Médecine (FR) ----
+{s:"A",l:"FR",t:"Cardiologie",q:"Un homme de 58 ans présente depuis 1 heure une douleur thoracique constrictive. L'ECG montre un sus-décalage du segment ST de V1 à V4. Un centre de cardiologie interventionnelle est accessible en 60 minutes. Quelle est la conduite prioritaire ?",o:["Thrombolyse différée à 24 heures","Angioplastie coronaire primaire","Épreuve d'effort","Échocardiographie puis décision à 48 heures","Anticoagulation seule sans reperfusion"],a:1,e:"Dans un SCA avec sus-décalage de ST de moins de 12 h, l'angioplastie primaire est la reperfusion de choix si elle est réalisable dans les 120 minutes suivant le diagnostic. Sinon, fibrinolyse sans délai.",r:"ESC 2023 Guidelines for acute coronary syndromes"},
+{s:"A",l:"FR",t:"Cardiologie",q:"Un pouls ample et bondissant avec une pression artérielle différentielle élargie évoque en premier lieu :",o:["Un rétrécissement aortique","Une insuffisance aortique","Un rétrécissement mitral","Une cardiomyopathie hypertrophique obstructive","Une péricardite chronique constrictive"],a:1,e:"L'insuffisance aortique importante donne une hyperpulsatilité artérielle (pouls de Corrigan, danse des artères) et une pression différentielle élargie par baisse de la diastolique.",r:"Collège des enseignants de cardiologie (CNEC), Cardiologie"},
+{s:"A",l:"FR",t:"Cardiologie",q:"Chez un adulte de 50 ans avec une hypertension artérielle essentielle non compliquée, quel choix de traitement de première intention est recommandé par l'OMS ?",o:["Bêtabloquant en monothérapie obligatoire","IEC ou ARA2, inhibiteur calcique à longue durée d'action, ou diurétique thiazidique","Clonidine","Alpha-bloquant (prazosine)","Furosémide"],a:1,e:"L'OMS 2021 recommande en première ligne l'une des trois classes : IEC/ARA2, inhibiteur calcique dihydropyridinique de longue durée, ou diurétique thiazidique/apparenté.",r:"WHO Guideline for the pharmacological treatment of hypertension in adults (2021)"},
+{s:"A",l:"FR",t:"Pharmacologie",q:"Quel effet indésirable est le plus caractéristique des inhibiteurs de l'enzyme de conversion (IEC) ?",o:["Toux sèche","Hypokaliémie","Bradycardie sinusale","Hyperuricémie","Hypoglycémie"],a:0,e:"La toux sèche (accumulation de bradykinine) touche jusqu'à 10 % des patients. Autres effets : hyperkaliémie, insuffisance rénale fonctionnelle, angio-œdème.",r:"Vidal / BNF: ACE inhibitors"},
+{s:"A",l:"FR",t:"Cardiologie",q:"Un homme de 72 ans, hypertendu et diabétique, présente une fibrillation atriale non valvulaire permanente. Quelle prévention thromboembolique est indiquée ?",o:["Aucun traitement","Aspirine seule","Anticoagulation orale","Clopidogrel seul","Héparine sous-cutanée à vie"],a:2,e:"Score CHA2DS2-VA = 3 (âge 65–74 ans, HTA, diabète). Une anticoagulation orale (AOD de préférence, ou AVK) est indiquée. L'aspirine n'est pas recommandée pour prévenir l'AVC dans la FA.",r:"ESC 2024 Guidelines for atrial fibrillation"},
+{s:"A",l:"FR",t:"Pneumologie",q:"Suspicion d'embolie pulmonaire chez une patiente hémodynamiquement stable dont la probabilité clinique est faible. Quel est le premier examen à réaliser ?",o:["Dosage des D-dimères","Angioscanner thoracique d'emblée","Scintigraphie de ventilation-perfusion","Angiographie pulmonaire","Échographie cardiaque"],a:0,e:"En probabilité faible ou intermédiaire, des D-dimères négatifs éliminent l'EP. S'ils sont positifs, on réalise l'angioscanner.",r:"ESC 2019 Guidelines on acute pulmonary embolism"},
+{s:"A",l:"FR",t:"Infectiologie",q:"Quel germe est le plus fréquemment responsable des pneumonies aiguës communautaires de l'adulte ?",o:["Streptococcus pneumoniae","Haemophilus influenzae","Mycoplasma pneumoniae","Legionella pneumophila","Klebsiella pneumoniae"],a:0,e:"Le pneumocoque reste la première cause de pneumonie communautaire et la principale cause de décès.",r:"ATS/IDSA 2019 Community-acquired pneumonia guideline"},
+{s:"A",l:"FR",t:"Infectiologie",q:"Nouveau cas de tuberculose pulmonaire à bacilloscopie positive, sensible aux antituberculeux. Quel est le schéma standard recommandé par l'OMS ?",o:["2 mois RHZE puis 4 mois RH","6 mois d'isoniazide seul","2 mois RHZ puis 10 mois RH","9 mois RH","4 mois RHZE sans phase de continuation"],a:0,e:"Schéma standard 2RHZE/4RH : rifampicine, isoniazide, pyrazinamide et éthambutol pendant 2 mois, puis rifampicine et isoniazide pendant 4 mois.",r:"WHO consolidated guidelines on tuberculosis, Module 4: treatment (2022)"},
+{s:"A",l:"FR",t:"Pneumologie",q:"Quel examen est indispensable pour affirmer le diagnostic de BPCO ?",o:["Radiographie thoracique","Spirométrie avec test de réversibilité","Gaz du sang artériel","Scanner thoracique","Numération formule sanguine"],a:1,e:"Le diagnostic repose sur un trouble ventilatoire obstructif persistant : VEMS/CVF < 0,70 après bronchodilatateur.",r:"GOLD 2024 Report"},
+{s:"A",l:"FR",t:"Pneumologie",q:"Lequel de ces signes définit un asthme aigu grave ?",o:["Parole impossible et silence auscultatoire","Toux productive","Fréquence respiratoire à 18/min","Débit expiratoire de pointe à 80 % de la valeur théorique","SpO2 à 97 % en air ambiant"],a:0,e:"Signes de gravité : parole impossible, silence auscultatoire, cyanose, épuisement, confusion, DEP < 50 %, SpO2 < 92 %.",r:"GINA 2024"},
+{s:"A",l:"FR",t:"Infectiologie",q:"LCR trouble : 1 500 éléments/mm³ à 90 % de polynucléaires, glycorachie basse, présence de diplocoques Gram négatif. Quel est le germe le plus probable ?",o:["Streptococcus pneumoniae","Neisseria meningitidis","Listeria monocytogenes","Haemophilus influenzae","Cryptococcus neoformans"],a:1,e:"Les diplocoques Gram négatif dans le LCR orientent vers le méningocoque. Le pneumocoque est un diplocoque Gram positif, Listeria un bacille Gram positif.",r:"IDSA Practice guidelines for bacterial meningitis"},
+{s:"A",l:"FR",t:"Infectiologie",q:"Un jeune homme fébrile présente un purpura extensif avec des éléments nécrotiques. Quelle est la conduite immédiate ?",o:["Ponction lombaire avant tout traitement","Scanner cérébral avant tout traitement","Injection immédiate de ceftriaxone","Attendre le résultat des hémocultures","Corticothérapie seule"],a:2,e:"Le purpura fulminans est une urgence absolue : ceftriaxone (ou céfotaxime) immédiate, avant tout examen complémentaire, puis réanimation.",r:"SPILF / WHO meningitis guidelines"},
+{s:"A",l:"FR",t:"Neurologie",q:"Hémiplégie brutale depuis 2 heures. Le scanner cérébral ne montre pas d'hémorragie et il n'existe aucune contre-indication. Quel traitement proposer ?",o:["Aspirine seule","Thrombolyse intraveineuse","Héparine à dose curative","Abstention thérapeutique","Mannitol"],a:1,e:"Dans l'AVC ischémique, la thrombolyse IV (altéplase ou ténectéplase) est indiquée jusqu'à 4 h 30 après le début des symptômes, en complément d'une éventuelle thrombectomie.",r:"ESO / AHA-ASA 2019 Acute ischemic stroke guidelines"},
+{s:"A",l:"FR",t:"Neurologie",q:"Quel élément oriente vers une crise épileptique généralisée plutôt que vers une syncope ?",o:["Morsure latérale de la langue","Pâleur","Récupération immédiate de la conscience","Prodromes vagaux (nausées, sueurs)","Perte de connaissance brève en position debout prolongée"],a:0,e:"La morsure latérale de la langue, la confusion post-critique prolongée et les mouvements tonico-cloniques orientent vers une crise épileptique.",r:"ESC 2018 Syncope guidelines; Collège des enseignants de neurologie"},
+{s:"A",l:"FR",t:"Infectiologie",q:"Paludisme grave à Plasmodium falciparum chez un adulte. Quel est le traitement de première intention ?",o:["Chloroquine orale","Artésunate intraveineux","Quinine orale","Primaquine","Doxycycline seule"],a:1,e:"L'artésunate IV (ou IM) est le traitement de référence du paludisme grave, relayé par une combinaison à base d'artémisinine par voie orale.",r:"WHO Guidelines for malaria (2023)"},
+{s:"A",l:"FR",t:"Infectiologie",q:"Chez un patient atteint de dengue, lequel de ces signes est un signe d'alerte ?",o:["Douleurs abdominales intenses ou vomissements persistants","Fièvre à 39 °C","Céphalées rétro-orbitaires","Myalgies","Éruption maculeuse"],a:0,e:"Signes d'alerte : douleurs abdominales, vomissements persistants, épanchements, saignement muqueux, léthargie, hépatomégalie, hématocrite en hausse avec chute rapide des plaquettes.",r:"WHO Dengue: guidelines for diagnosis, treatment, prevention and control"},
+{s:"A",l:"FR",t:"Infectiologie",q:"Quel est le traitement antirétroviral de première ligne préféré par l'OMS chez l'adulte ?",o:["Zidovudine + lamivudine + névirapine","Ténofovir + lamivudine + dolutégravir","Stavudine + lamivudine + efavirenz","Abacavir en monothérapie","Lopinavir/ritonavir en monothérapie"],a:1,e:"Le schéma TLD (ténofovir, lamivudine, dolutégravir) est la première ligne préférée par l'OMS.",r:"WHO Consolidated HIV guidelines (2021)"},
+{s:"A",l:"FR",t:"Hépatologie",q:"Quel marqueur définit une hépatite B chronique ?",o:["Anticorps anti-HBs positifs","Antigène HBs positif pendant plus de 6 mois","IgM anti-HBc positives","Anticorps anti-HBe positifs","Transaminases normales"],a:1,e:"La persistance de l'AgHBs plus de 6 mois définit l'infection chronique. Les IgM anti-HBc signent une infection aiguë ; les anti-HBs isolés traduisent l'immunité.",r:"EASL 2017 Clinical Practice Guidelines on HBV infection"},
+{s:"A",l:"FR",t:"Hépatologie",q:"Chez un cirrhotique avec ascite, à partir de quel taux de polynucléaires neutrophiles dans le liquide d'ascite retient-on une infection spontanée ?",o:["50/mm³","100/mm³","250/mm³","500/mm³","1 000/mm³"],a:2,e:"PNN ≥ 250/mm³ = infection spontanée du liquide d'ascite : céphalosporine de 3e génération et albumine.",r:"EASL 2018 Guidelines for decompensated cirrhosis"},
+{s:"A",l:"FR",t:"Gastro-entérologie",q:"Hématémèse chez un cirrhotique, suspicion de rupture de varices œsophagiennes. En plus du traitement vasoactif, quelle association est recommandée ?",o:["Antibioprophylaxie (ceftriaxone) et endoscopie dans les 12 heures","Chirurgie de dérivation en urgence","Bêtabloquant intraveineux seul","Transfusion jusqu'à une hémoglobine de 12 g/dL","AINS pour l'analgésie"],a:0,e:"Prise en charge : vasoactif (terlipressine, octréotide), antibioprophylaxie, transfusion restrictive (cible Hb 7–8 g/dL) et ligature endoscopique dans les 12 heures.",r:"Baveno VII consensus (2022)"},
+{s:"A",l:"FR",t:"Hématologie",q:"Anémie microcytaire hypochrome avec ferritine sérique effondrée. Quel est le diagnostic ?",o:["Thalassémie mineure","Carence martiale","Anémie inflammatoire","Carence en vitamine B12","Aplasie médullaire"],a:1,e:"Une ferritine basse affirme la carence en fer. Dans la thalassémie mineure (fréquente au Cambodge), la ferritine est normale ou élevée.",r:"WHO guideline on use of ferritin concentrations (2020)"},
+{s:"A",l:"FR",t:"Hématologie",q:"Anémie macrocytaire arégénérative associée à des paresthésies des membres inférieurs et à une ataxie proprioceptive. Quel diagnostic évoquer en premier ?",o:["Carence en vitamine B12","Carence martiale","Thalassémie","Anémie hémolytique auto-immune","Leucémie aiguë"],a:0,e:"La sclérose combinée de la moelle associée à une macrocytose évoque une carence en B12 (maladie de Biermer notamment).",r:"BSH Guidelines for cobalamin and folate disorders"},
+{s:"A",l:"FR",t:"Néphrologie",q:"Chez l'adulte, le syndrome néphrotique est défini par :",o:["Protéinurie > 0,5 g/24 h et albuminémie < 35 g/L","Protéinurie > 3 g/24 h et albuminémie < 30 g/L","Hématurie et hypertension artérielle","Protéinurie > 1 g/24 h et œdèmes","Créatininémie élevée et protéinurie"],a:1,e:"Définition : protéinurie > 3 g/24 h (> 50 mg/kg/j chez l'enfant) et albuminémie < 30 g/L.",r:"KDIGO 2021 Glomerular diseases guideline"},
+{s:"A",l:"FR",t:"Néphrologie",q:"Kaliémie à 7,1 mmol/L avec ondes T amples et pointues à l'ECG. Quel est le premier traitement à administrer ?",o:["Gluconate de calcium intraveineux","Kayexalate oral","Furosémide intraveineux","Bicarbonate de sodium oral","Hémodialyse sans autre traitement"],a:0,e:"Le calcium IV stabilise la membrane myocardique en quelques minutes. On associe ensuite insuline-glucose et bêta-2 mimétiques, puis l'épuration du potassium.",r:"UK Renal Association Hyperkalaemia guideline (2023)"},
+{s:"A",l:"FR",t:"Néphrologie",q:"Quel argument est en faveur d'une insuffisance rénale aiguë fonctionnelle (prérénale) ?",o:["Natriurèse < 20 mmol/L","Cylindres granuleux dans le sédiment","Protéinurie massive","Hématurie avec cylindres hématiques","Natriurèse > 40 mmol/L"],a:0,e:"Dans l'IRA fonctionnelle, le rein réabsorbe le sodium : natriurèse < 20 mmol/L, FeNa < 1 %, rapport urée/créatinine urinaires élevé.",r:"KDIGO Clinical Practice Guideline for Acute Kidney Injury"},
+{s:"A",l:"FR",t:"Endocrinologie",q:"Diabète de type 2 nouvellement diagnostiqué, sans contre-indication. Quel médicament est recommandé en première intention ?",o:["Metformine","Insuline rapide","Glibenclamide","Acarbose","Pioglitazone"],a:0,e:"La metformine reste le traitement oral de première intention, associée aux règles hygiéno-diététiques.",r:"WHO / ADA Standards of Care 2024"},
+{s:"A",l:"FR",t:"Endocrinologie",q:"Acidocétose diabétique sévère avec déshydratation. Quel est le premier geste thérapeutique ?",o:["Insuline sous-cutanée seule","Réhydratation intraveineuse par NaCl 0,9 %","Bicarbonates de sodium systématiques","Sérum glucosé à 30 %","Restriction hydrique"],a:1,e:"Le remplissage par sérum salé isotonique est la première étape. L'insuline IV continue suit, après vérification de la kaliémie.",r:"JBDS / ADA Hyperglycemic crises guideline"},
+{s:"A",l:"FR",t:"Endocrinologie",q:"Quel signe est spécifique de la maladie de Basedow parmi les causes d'hyperthyroïdie ?",o:["Tachycardie","Amaigrissement","Exophtalmie (orbitopathie)","Tremblement","Thermophobie"],a:2,e:"L'orbitopathie et le myxœdème prétibial sont spécifiques de la maladie de Basedow. Les autres signes relèvent de la thyrotoxicose, quelle qu'en soit la cause.",r:"ETA 2018 Guideline for Graves' hyperthyroidism"},
+{s:"A",l:"FR",t:"Endocrinologie",q:"Quel profil biologique correspond à une hypothyroïdie primaire ?",o:["TSH basse, T4 libre élevée","TSH élevée, T4 libre basse","TSH basse, T4 libre basse","TSH normale, T4 libre élevée","TSH élevée, T4 libre élevée"],a:1,e:"Dans l'hypothyroïdie primaire, la TSH s'élève en réponse à la baisse de la T4 libre. TSH basse avec T4L basse évoque une origine centrale.",r:"ATA Guidelines for hypothyroidism"},
+{s:"A",l:"FR",t:"Endocrinologie",q:"Insuffisance surrénale aiguë avec collapsus. Quel est le traitement d'urgence ?",o:["Hydrocortisone IV et remplissage par sérum salé","Fludrocortisone orale seule","Dexaméthasone orale seule","Insuline intraveineuse","Restriction sodée"],a:0,e:"Hydrocortisone 100 mg IV en bolus puis en continu, avec réhydratation par NaCl 0,9 % et glucose si hypoglycémie.",r:"Endocrine Society 2016 Primary adrenal insufficiency guideline"},
+{s:"A",l:"FR",t:"Rhumatologie",q:"Quel auto-anticorps est le plus spécifique de la polyarthrite rhumatoïde ?",o:["Facteur rhumatoïde","Anticorps anti-peptides cycliques citrullinés (anti-CCP)","Anticorps antinucléaires","Anticorps anti-ADN natif","ANCA"],a:1,e:"Les anti-CCP ont une spécificité supérieure à 95 %. Le facteur rhumatoïde est moins spécifique.",r:"ACR/EULAR 2010 RA classification criteria"},
+{s:"A",l:"FR",t:"Rhumatologie",q:"Quel examen apporte le diagnostic de certitude de la goutte ?",o:["Uricémie élevée","Radiographie de l'articulation","Mise en évidence de cristaux d'urate de sodium dans le liquide synovial","CRP élevée","Échographie rénale"],a:2,e:"Le diagnostic de certitude repose sur les cristaux d'urate monosodique (aiguilles, biréfringence négative). L'uricémie peut être normale pendant la crise.",r:"EULAR 2018 Gout diagnosis recommendations"},
+{s:"A",l:"FR",t:"Médecine interne",q:"Quel anticorps est le plus spécifique du lupus érythémateux systémique ?",o:["Anticorps antinucléaires","Anticorps anti-ADN double brin","Facteur rhumatoïde","Anti-CCP","ANCA"],a:1,e:"Les anticorps antinucléaires sont sensibles mais peu spécifiques. Les anti-ADN natif et anti-Sm sont spécifiques du lupus.",r:"EULAR/ACR 2019 SLE classification criteria"},
+{s:"A",l:"FR",t:"Infectiologie",q:"Plaie profonde souillée de terre chez un adulte jamais vacciné contre le tétanos. Quelle prophylaxie est indiquée ?",o:["Rien si la plaie est bien nettoyée","Vaccin antitétanique seul","Immunoglobulines humaines antitétaniques seules","Immunoglobulines humaines antitétaniques et vaccination","Antibiothérapie seule"],a:3,e:"Plaie à risque chez un non-vacciné : immunoglobulines humaines (protection immédiate) et première dose de vaccin (anatoxine) en un site différent, en plus du parage de la plaie.",r:"WHO Tetanus vaccines position paper (2017)"},
+{s:"A",l:"FR",t:"Toxicologie",q:"Intoxication volontaire au paracétamol (15 g) il y a 4 heures. Quel est l'antidote ?",o:["Naloxone","N-acétylcystéine","Flumazénil","Charbon activé seul","Atropine"],a:1,e:"La N-acétylcystéine IV reconstitue le glutathion et prévient l'hépatotoxicité. Son efficacité est maximale dans les 8 heures.",r:"Toxbase / AACT recommendations"},
+// ---- PART B · Clinical & basic sciences (EN) ----
+{s:"B",l:"EN",t:"Anatomy",q:"A 30-year-old man has a midshaft fracture of the humerus after a motorbike crash. He cannot extend his wrist or fingers and has numbness over the dorsum of the first web space. Which nerve is injured?",o:["Median nerve","Ulnar nerve","Musculocutaneous nerve","Axillary nerve","Radial nerve"],a:4,e:"The radial nerve runs in the spiral groove of the humerus. Injury there causes wrist drop and sensory loss over the dorsal first web space.",r:"Moore, Clinically Oriented Anatomy"},
+{s:"B",l:"EN",t:"Anatomy",q:"A woman has night-time tingling of the thumb, index and middle fingers and wasting of the thenar eminence. Which nerve is compressed?",o:["Radial nerve","Ulnar nerve at the elbow","Median nerve at the wrist","Musculocutaneous nerve","Anterior interosseous nerve only"],a:2,e:"Carpal tunnel syndrome is compression of the median nerve under the flexor retinaculum. It affects the lateral three and a half digits and the thenar muscles.",r:"Moore, Clinically Oriented Anatomy"},
+{s:"B",l:"EN",t:"Anatomy",q:"After a total thyroidectomy, a patient has a persistently hoarse voice. Which nerve is most likely injured?",o:["External branch of the superior laryngeal nerve","Recurrent laryngeal nerve","Hypoglossal nerve","Glossopharyngeal nerve","Phrenic nerve"],a:1,e:"The recurrent laryngeal nerve supplies all intrinsic laryngeal muscles except cricothyroid. Unilateral injury causes hoarseness.",r:"Bailey & Love's Short Practice of Surgery"},
+{s:"B",l:"EN",t:"Anatomy",q:"A testicular germ cell tumour first spreads through the lymphatics to which nodes?",o:["Superficial inguinal nodes","Para-aortic (retroperitoneal) nodes","External iliac nodes","Mesenteric nodes","Axillary nodes"],a:1,e:"The testis descends from the posterior abdominal wall, so its lymph drains to the para-aortic nodes at about L1–L2. Scrotal skin drains to the inguinal nodes.",r:"Moore, Clinically Oriented Anatomy; ESMO Testicular cancer guideline"},
+{s:"B",l:"EN",t:"Anatomy",q:"The hepatic portal vein is formed by the union of which two veins?",o:["Inferior vena cava and renal vein","Superior mesenteric vein and splenic vein","Inferior mesenteric vein and left gastric vein","Splenic vein and left renal vein","Hepatic vein and superior mesenteric vein"],a:1,e:"The portal vein forms behind the neck of the pancreas from the superior mesenteric and splenic veins. The inferior mesenteric vein usually joins the splenic vein.",r:"Gray's Anatomy for Students"},
+{s:"B",l:"EN",t:"Physiology",q:"What is the main stimulus for erythropoietin secretion?",o:["Hypoxia sensed by the kidney","High plasma iron","Raised blood pressure","Hypercalcaemia","Thyroid hormone"],a:0,e:"Peritubular interstitial cells of the kidney release erythropoietin when tissue oxygen falls, through hypoxia-inducible factor (HIF).",r:"Guyton & Hall, Textbook of Medical Physiology"},
+{s:"B",l:"EN",t:"Physiology",q:"Where does antidiuretic hormone (ADH) mainly act to increase water reabsorption?",o:["Proximal convoluted tubule","Descending loop of Henle","Thick ascending limb","Collecting duct, through aquaporin-2","Glomerulus"],a:3,e:"ADH binds V2 receptors on principal cells of the collecting duct and inserts aquaporin-2 water channels into the luminal membrane.",r:"Guyton & Hall, Textbook of Medical Physiology"},
+{s:"B",l:"EN",t:"Physiology",q:"Arterial blood gas: pH 7.25, PaCO₂ 26 mmHg, HCO₃⁻ 12 mmol/L. Na⁺ 140, Cl⁻ 100 mmol/L. What is the best interpretation?",o:["Respiratory acidosis","Normal anion gap metabolic acidosis","High anion gap metabolic acidosis with appropriate respiratory compensation","Metabolic alkalosis","Mixed respiratory and metabolic alkalosis"],a:2,e:"The anion gap is 140 − (100 + 12) = 28, which is high. Winter's formula gives an expected PaCO₂ of 1.5 × 12 + 8 = 26 ± 2 mmHg, so compensation is appropriate. Causes include DKA, lactic acidosis and renal failure.",r:"Harrison's Principles of Internal Medicine: acid-base disorders"},
+{s:"B",l:"EN",t:"Biochemistry",q:"A malnourished man with chronic alcohol use is confused, with ataxia and nystagmus. What should be given before any glucose infusion?",o:["Vitamin B12","Folic acid","Thiamine (vitamin B1)","Vitamin K","Niacin"],a:2,e:"This is Wernicke encephalopathy from thiamine deficiency. Glucose given first can make it worse, so give IV thiamine first.",r:"EFNS guidelines for Wernicke encephalopathy"},
+{s:"B",l:"EN",t:"Pharmacology",q:"How does warfarin work?",o:["Direct thrombin inhibition","Inhibition of vitamin K epoxide reductase, reducing factors II, VII, IX and X","Activation of antithrombin","Factor Xa inhibition","Inhibition of platelet COX-1"],a:1,e:"Warfarin blocks vitamin K recycling, reducing the gamma-carboxylated clotting factors II, VII, IX and X, and proteins C and S. It is monitored with the INR.",r:"Goodman & Gilman's Pharmacological Basis of Therapeutics"},
+{s:"B",l:"EN",t:"Pharmacology",q:"What reverses bleeding caused by unfractionated heparin?",o:["Vitamin K","Protamine sulfate","Fresh frozen plasma only","Tranexamic acid","Idarucizumab"],a:1,e:"Protamine sulfate binds heparin and neutralises it. Idarucizumab reverses dabigatran; vitamin K reverses warfarin.",r:"BNF: Protamine sulfate"},
+{s:"B",l:"EN",t:"Pharmacology",q:"How does salbutamol cause bronchodilation?",o:["It blocks muscarinic receptors on airway smooth muscle","It stimulates β₂-adrenoceptors, raising intracellular cAMP in airway smooth muscle","It blocks sodium channels in airway epithelial cells","It reduces the firing of brain-stem respiratory neurons","It blocks β-adrenoceptors on airway smooth muscle"],a:1,e:"Salbutamol is a short-acting β₂ agonist. Receptor activation increases cAMP and relaxes bronchial smooth muscle. Ipratropium is the muscarinic antagonist.",r:"Rang & Dale's Pharmacology"},
+{s:"B",l:"EN",t:"Pharmacology",q:"Which toxicities are characteristic of aminoglycosides such as gentamicin?",o:["Hepatotoxicity and pancreatitis","Nephrotoxicity and ototoxicity","Red man syndrome","Tendon rupture","Disulfiram-like reaction"],a:1,e:"Aminoglycosides accumulate in renal tubular cells and the inner ear. Monitor levels and renal function.",r:"BNF: Aminoglycosides"},
+{s:"B",l:"EN",t:"Toxicology",q:"A patient on morphine for cancer pain is drowsy, with pinpoint pupils and a respiratory rate of 7/min. What is the immediate treatment?",o:["Flumazenil","Naloxone","N-acetylcysteine","Atropine","Physostigmine"],a:1,e:"Naloxone is a competitive opioid antagonist. In palliative patients, titrate small doses so that you reverse respiratory depression without triggering severe pain or withdrawal.",r:"BNF: Naloxone; Resuscitation Council UK"},
+{s:"B",l:"EN",t:"Microbiology",q:"Pus from an abscess shows Gram-positive cocci in clusters that are coagulase-positive. What is the organism?",o:["Streptococcus pyogenes","Staphylococcus aureus","Staphylococcus epidermidis","Enterococcus faecalis","Streptococcus pneumoniae"],a:1,e:"Gram-positive cocci in clusters are staphylococci. Coagulase-positive means S. aureus; S. epidermidis is coagulase-negative.",r:"Sherris Medical Microbiology"},
+{s:"B",l:"EN",t:"Microbiology",q:"A diabetic rice farmer from rural Cambodia has fever, pneumonia and multiple liver and splenic abscesses in the rainy season. What is the most likely organism?",o:["Mycobacterium tuberculosis","Burkholderia pseudomallei","Entamoeba histolytica","Streptococcus pneumoniae","Salmonella Typhi"],a:1,e:"Melioidosis is endemic in Cambodia. The main risk factors are diabetes and contact with soil or water. Treat with IV ceftazidime or meropenem, then a long eradication course of co-trimoxazole.",r:"Wiersinga et al., NEJM 2012; Cambodia melioidosis surveillance data"},
+{s:"B",l:"EN",t:"Microbiology",q:"A farmer develops fever, myalgia, conjunctival suffusion, jaundice and acute kidney injury two weeks after floods. What is the most likely diagnosis?",o:["Dengue","Leptospirosis","Hepatitis A","Scrub typhus","Malaria"],a:1,e:"Weil's disease, the severe form of leptospirosis, follows exposure to water contaminated with animal urine. Conjunctival suffusion is a classic clue. Treat with doxycycline, or with penicillin or ceftriaxone if severe.",r:"WHO Human leptospirosis: guidance for diagnosis, surveillance and control"},
+{s:"B",l:"EN",t:"Emergency",q:"Minutes after IV antibiotics, a patient develops stridor, urticaria and a BP of 70/40 mmHg. What is the first drug to give?",o:["IV chlorphenamine","IV hydrocortisone","IM adrenaline 0.5 mg (0.5 mL of 1 mg/mL)","Nebulised salbutamol","Oral prednisolone"],a:2,e:"IM adrenaline into the anterolateral thigh is the first-line treatment for anaphylaxis, repeated after 5 minutes if needed. Antihistamines and steroids are adjuncts only.",r:"Resuscitation Council UK Anaphylaxis guideline (2021); WAO 2020"},
+{s:"B",l:"EN",t:"Immunology",q:"Anaphylaxis is a type I hypersensitivity reaction. Which cell and antibody mediate it?",o:["Neutrophils and IgG","Mast cells and IgE","T cells and no antibody","Macrophages and IgM","B cells and IgA"],a:1,e:"Allergen cross-links IgE on mast cells and basophils, releasing histamine and other mediators within minutes.",r:"Janeway's Immunobiology"},
+{s:"B",l:"EN",t:"Surgery",q:"In suspected acute appendicitis, pressing the left iliac fossa causes pain in the right iliac fossa. What is this sign called?",o:["Murphy's sign","Rovsing's sign","Psoas sign","Cullen's sign","Grey Turner's sign"],a:1,e:"Rovsing's sign supports appendicitis. Murphy's sign suggests cholecystitis; Cullen's and Grey Turner's signs suggest retroperitoneal haemorrhage, such as in pancreatitis.",r:"Bailey & Love's Short Practice of Surgery"},
+{s:"B",l:"EN",t:"Surgery",q:"A patient has fever with rigors, jaundice and right upper quadrant pain. What is the most likely diagnosis?",o:["Acute appendicitis","Acute pancreatitis","Acute cholecystitis","Acute cholangitis","Acute viral hepatitis"],a:3,e:"Charcot's triad (fever, jaundice, RUQ pain) indicates ascending cholangitis. Treat with antibiotics and urgent biliary drainage, usually by ERCP.",r:"Tokyo Guidelines 2018"},
+{s:"B",l:"EN",t:"Surgery",q:"A 70 kg adult has 20% total body surface area deep burns. Using the Parkland formula (4 mL/kg/%TBSA), how much fluid is given in the first 8 hours?",o:["1,400 mL","2,800 mL","4,200 mL","5,600 mL","11,200 mL"],a:1,e:"4 × 70 × 20 = 5,600 mL of Hartmann's over 24 hours from the time of the burn. Half (2,800 mL) goes in the first 8 hours and the rest over 16 hours. Adjust to urine output.",r:"ATLS / ISBI Practice guidelines for burn care"},
+{s:"B",l:"EN",t:"Emergency",q:"After chest trauma, a patient is hypotensive with a deviated trachea, a hyper-resonant hemithorax and absent breath sounds. What is the immediate management?",o:["Chest X-ray first","CT chest","Immediate needle or finger decompression, then a chest drain","Intubate and ventilate first","Pericardiocentesis"],a:2,e:"Tension pneumothorax is a clinical diagnosis. Decompress immediately, without waiting for imaging, then insert a chest drain.",r:"ATLS 10th edition"},
+{s:"B",l:"EN",t:"Emergency",q:"A head-injured patient opens his eyes to pain, makes incomprehensible sounds and withdraws from pain. What is his Glasgow Coma Scale score?",o:["6","7","8","9","10"],a:2,e:"Eyes 2 + Verbal 2 + Motor 4 = 8. A GCS of 8 or less usually means the airway needs protecting.",r:"Teasdale & Jennett; ATLS"},
+{s:"B",l:"EN",t:"Statistics",q:"A new test is used on 100 patients who have the disease. It is positive in 90 and negative in 10. What is its sensitivity?",o:["10%","50%","80%","90%","Cannot be calculated without healthy controls"],a:3,e:"Sensitivity = TP / (TP + FN) = 90 / 100 = 90%. Specificity would need the results in people without the disease.",r:"Gordis Epidemiology"},
+{s:"B",l:"EN",t:"Statistics",q:"In a trial, mortality is 15% with placebo and 10% with the new drug. What is the number needed to treat to prevent one death?",o:["5","10","20","33","50"],a:2,e:"Absolute risk reduction = 15% − 10% = 5%. NNT = 1 / 0.05 = 20.",r:"Gordis Epidemiology"},
+{s:"B",l:"EN",t:"Cardiology",q:"What is the most common cause of death in the first hours after an acute myocardial infarction?",o:["Cardiac rupture","Ventricular fibrillation","Cardiogenic shock","Pulmonary embolism","Pericarditis"],a:1,e:"Early deaths, many before reaching hospital, are mostly due to ventricular fibrillation. This is why early defibrillator access matters.",r:"ESC 2023 ACS guidelines"},
+{s:"B",l:"EN",t:"Endocrinology",q:"A patient on insulin is found unconscious with a capillary glucose of 1.8 mmol/L. IV access is available. What is the treatment?",o:["Subcutaneous insulin","IV glucose (e.g. 10% dextrose 150–200 mL)","Oral sugar solution","Hydrocortisone IV","Observation only"],a:1,e:"Severe hypoglycaemia in an unconscious patient needs IV glucose, or IM glucagon if there is no IV access. Never give oral glucose to an unconscious patient.",r:"JBDS Hospital management of hypoglycaemia (2023)"},
+{s:"B",l:"EN",t:"Obstetrics",q:"A 30-year-old woman at 36 weeks has a generalised seizure. Her BP is 170/115 mmHg with proteinuria. Which drug prevents further seizures?",o:["Diazepam","Phenytoin","Magnesium sulfate","Nifedipine","Levetiracetam"],a:2,e:"Magnesium sulfate is the anticonvulsant of choice in eclampsia: 4 g IV loading dose, then maintenance. Calcium gluconate is the antidote to magnesium toxicity.",r:"WHO recommendations for prevention and treatment of pre-eclampsia and eclampsia"},
+{s:"B",l:"EN",t:"Ethics",q:"Which of these is NOT required for valid informed consent to chemotherapy?",o:["The patient has decision-making capacity","The patient receives adequate information on benefits, risks and alternatives","The decision is voluntary","The patient's family agrees with the decision","The consent covers the specific treatment proposed"],a:3,e:"Valid consent needs capacity, adequate information and voluntariness from the patient. Family involvement is often helpful, but family agreement is not a legal requirement when a competent adult consents.",r:"WMA Declaration of Lisbon; GMC Decision making and consent"},
+// ---- PART C · Oncologie / Oncology (FR + EN) ----
+{s:"C",l:"EN",t:"Oncologic emergency",q:"Six hours after starting chemotherapy for Burkitt lymphoma: K⁺ 6.4 mmol/L, phosphate 2.4 mmol/L, uric acid 720 µmol/L, corrected calcium 1.8 mmol/L, and rising creatinine. What is the diagnosis?",o:["Hypercalcaemia of malignancy","SIADH","Tumour lysis syndrome","Adrenal crisis","Hepatorenal syndrome"],a:2,e:"Hyperkalaemia, hyperphosphataemia, hyperuricaemia and hypocalcaemia with AKI after chemotherapy for a fast-growing tumour is tumour lysis syndrome (Cairo–Bishop criteria). Prevent it with hydration and allopurinol or rasburicase.",r:"Cairo & Bishop 2004; ESMO/BSH TLS guidance"},
+{s:"C",l:"EN",t:"Oncologic emergency",q:"Ten days after chemotherapy, a patient has a temperature of 38.5 °C and an absolute neutrophil count of 0.3 × 10⁹/L. What is the best next step?",o:["Wait for culture results before treating","Oral paracetamol and review tomorrow","G-CSF alone","Blood cultures, then an IV anti-pseudomonal β-lactam within 1 hour","IV vancomycin alone"],a:3,e:"Febrile neutropenia is an emergency. Take cultures, then start an empirical anti-pseudomonal β-lactam (e.g. piperacillin-tazobactam or cefepime) within 60 minutes.",r:"ASCO/IDSA 2018 Fever and neutropenia guideline; ESMO 2016"},
+{s:"C",l:"FR",t:"Urgence oncologique",q:"Un homme suivi pour un cancer de la prostate métastatique présente des dorsalgies récentes, une faiblesse des membres inférieurs et un niveau sensitif en T10. Quelle est la première conduite ?",o:["Morphine orale et retour à domicile","Scintigraphie osseuse la semaine suivante","Corticothérapie à forte dose (dexaméthasone) et IRM de tout le rachis en urgence","Débuter le docétaxel","Kinésithérapie"],a:2,e:"La compression médullaire métastatique est une urgence : dexaméthasone, IRM rachidienne complète en urgence, puis radiothérapie ou chirurgie de décompression. Le pronostic fonctionnel dépend de l'état neurologique au moment du traitement.",r:"ESMO 2023 Metastatic spinal cord compression; NICE NG234"},
+{s:"C",l:"EN",t:"Oncologic emergency",q:"A patient with metastatic breast cancer is confused and dehydrated, with a corrected calcium of 3.6 mmol/L. What is the first step?",o:["Furosemide alone","Oral calcitonin","Aggressive IV 0.9% saline, then IV zoledronic acid","Dexamethasone alone","Immediate haemodialysis"],a:2,e:"Rehydrate first with isotonic saline, then give an IV bisphosphonate (zoledronic acid) or denosumab. Loop diuretics are only used once the patient is euvolaemic, if at all.",r:"ESMO 2018 Bone health / hypercalcaemia guidance"},
+{s:"C",l:"FR",t:"Urgence oncologique",q:"Quelle est la cause la plus fréquente du syndrome cave supérieur ?",o:["Thrombose sur cathéter central","Cancer bronchique, en particulier à petites cellules","Goitre plongeant","Fibrose médiastinale","Anévrisme de l'aorte"],a:1,e:"Les cancers bronchiques, surtout à petites cellules, puis les lymphomes, sont responsables de la majorité des syndromes caves supérieurs.",r:"Wilson et al., NEJM 2007; Collège des enseignants de pneumologie"},
+{s:"C",l:"EN",t:"Paraneoplastic",q:"A heavy smoker with a central lung mass has a serum sodium of 118 mmol/L, is clinically euvolaemic, and has a urine osmolality of 520 mOsm/kg. What is the most likely cancer?",o:["Squamous cell carcinoma","Small cell lung cancer","Adenocarcinoma","Mesothelioma","Carcinoid tumour"],a:1,e:"SIADH is the classic paraneoplastic syndrome of small cell lung cancer. Squamous cell carcinoma is more often linked to PTHrP-mediated hypercalcaemia.",r:"ESMO 2021 SCLC guideline"},
+{s:"C",l:"EN",t:"Chemotherapy toxicity",q:"Which pairing of a chemotherapy drug and its typical toxicity is correct?",o:["Bleomycin: haemorrhagic cystitis","Vincristine: cardiomyopathy","Cisplatin: nephrotoxicity and ototoxicity","Doxorubicin: pulmonary fibrosis","Cyclophosphamide: peripheral neuropathy"],a:2,e:"Cisplatin causes nephrotoxicity (prevent with hydration and magnesium), ototoxicity, neuropathy and severe emesis. The other pairs are mixed up.",r:"Chabner, Cancer Chemotherapy and Biotherapy; ESMO Handbook"},
+{s:"C",l:"FR",t:"Toxicité",q:"Avant et pendant un traitement par doxorubicine, quelle surveillance est indispensable ?",o:["Audiogramme","Fraction d'éjection ventriculaire gauche (échographie ou scintigraphie)","Épreuves fonctionnelles respiratoires","Électromyogramme","Fond d'œil"],a:1,e:"Les anthracyclines entraînent une cardiotoxicité cumulative, dose-dépendante et souvent irréversible (risque accru au-delà d'environ 450 mg/m²). On surveille la FEVG.",r:"ESC 2022 Cardio-oncology guidelines"},
+{s:"C",l:"EN",t:"Chemotherapy toxicity",q:"Which drug toxicity is limited by lifetime cumulative dose because of pulmonary fibrosis, and needs pulmonary function monitoring?",o:["Cisplatin","Bleomycin","Paclitaxel","5-fluorouracil","Etoposide"],a:1,e:"Bleomycin causes pneumonitis and fibrosis. The risk rises with cumulative dose, age, renal impairment and high inspired oxygen.",r:"ESMO Testicular cancer guideline; BNF"},
+{s:"C",l:"FR",t:"Toxicité",q:"Quelle molécule prévient la cystite hémorragique induite par le cyclophosphamide ou l'ifosfamide à forte dose ?",o:["Leucovorine","Mesna","Dexrazoxane","Amifostine","Allopurinol"],a:1,e:"La mesna neutralise l'acroléine, métabolite toxique pour la vessie. Le dexrazoxane protège le cœur des anthracyclines ; la leucovorine sert au sauvetage du méthotrexate.",r:"ASCO 2008 Chemotherapy and radiotherapy protectants guideline"},
+{s:"C",l:"EN",t:"Chemotherapy toxicity",q:"What is the dose-limiting toxicity of vincristine?",o:["Myelosuppression","Peripheral neuropathy","Cardiotoxicity","Nephrotoxicity","Pulmonary fibrosis"],a:1,e:"Vincristine causes sensory and motor neuropathy, constipation and ileus. Intrathecal administration is fatal, which is why it is given only by IV infusion in a minibag.",r:"WHO Information exchange system alert on vincristine; BNF"},
+{s:"C",l:"EN",t:"Chemotherapy",q:"Which drug is given as 'rescue' after high-dose methotrexate?",o:["Folic acid","Folinic acid (leucovorin)","Vitamin B12","Mesna","Glucarpidase is always used instead"],a:1,e:"Leucovorin bypasses the dihydrofolate reductase blockade and protects normal cells. Glucarpidase is reserved for toxic levels with renal failure.",r:"ESMO Handbook; BNF: Calcium folinate"},
+{s:"C",l:"EN",t:"Chemotherapy",q:"A patient develops severe mucositis, diarrhoea and neutropenia after the first cycle of 5-fluorouracil. Which inherited enzyme deficiency is most likely?",o:["TPMT deficiency","Dihydropyrimidine dehydrogenase (DPD) deficiency","G6PD deficiency","UGT1A1 deficiency","Pseudocholinesterase deficiency"],a:1,e:"DPD breaks down 5-FU and capecitabine. Deficiency (DPYD variants) causes life-threatening toxicity, and testing before treatment is now recommended.",r:"EMA 2020 recommendation on DPD testing"},
+{s:"C",l:"EN",t:"Breast",q:"Before starting trastuzumab for HER2-positive breast cancer, which baseline test is essential?",o:["Audiometry","Pulmonary function tests","Echocardiogram (LVEF)","Nerve conduction studies","Bone density scan"],a:2,e:"Trastuzumab can cause (usually reversible) cardiac dysfunction. Measure LVEF at baseline and about every 3 months during treatment.",r:"ESMO 2024 Early breast cancer guideline"},
+{s:"C",l:"FR",t:"Sein",q:"Femme de 62 ans ménopausée opérée d'un carcinome canalaire infiltrant du sein, récepteurs hormonaux positifs et HER2 négatif. Quelle hormonothérapie adjuvante est préférée ?",o:["Tamoxifène pendant 1 an","Inhibiteur de l'aromatase (létrozole, anastrozole)","Analogue de la LH-RH seul","Progestatifs","Aucune hormonothérapie"],a:1,e:"Chez la femme ménopausée, les inhibiteurs de l'aromatase sont préférés pendant au moins 5 ans. Le tamoxifène reste une option, notamment chez la femme non ménopausée.",r:"ESMO 2024 Early breast cancer guideline"},
+{s:"C",l:"EN",t:"Genetics",q:"A woman has a pathogenic BRCA1 mutation. Which cancers is she mainly at increased risk of?",o:["Colorectal and endometrial","Breast and ovarian","Thyroid and phaeochromocytoma","Gastric and lobular breast","Sarcoma and adrenal"],a:1,e:"BRCA1 carriers have a lifetime breast cancer risk of about 60–70% and an ovarian cancer risk of about 40%. Colorectal and endometrial cancer point to Lynch syndrome; thyroid and phaeochromocytoma to MEN2.",r:"NCCN Genetic/Familial High-Risk Assessment: Breast, Ovarian and Pancreatic"},
+{s:"C",l:"FR",t:"Foie",q:"Patient de 50 ans atteint d'une cirrhose liée au virus de l'hépatite B. Quel dépistage du carcinome hépatocellulaire est recommandé ?",o:["Scanner tous les 2 ans","Échographie hépatique, avec ou sans alpha-fœtoprotéine, tous les 6 mois","AFP seule une fois par an","Biopsie hépatique annuelle","Aucun dépistage"],a:1,e:"L'échographie semestrielle, avec ou sans AFP, est recommandée chez tout cirrhotique et chez certains porteurs chroniques du VHB sans cirrhose. Enjeu majeur au Cambodge, où l'hépatite B est fréquente.",r:"EASL 2018 HCC guidelines; AASLD 2023"},
+{s:"C",l:"EN",t:"Liver",q:"A cirrhotic patient has a 3 cm liver nodule with arterial-phase hyperenhancement and portal-venous washout on multiphase contrast CT. What is the next step to confirm hepatocellular carcinoma?",o:["Mandatory liver biopsy","No biopsy needed: the imaging is diagnostic of HCC in cirrhosis","Repeat ultrasound in 6 months","CEA measurement","PET-CT"],a:1,e:"In a cirrhotic liver, the typical pattern of arterial enhancement with washout (LI-RADS 5) is diagnostic without histology. Biopsy is for atypical lesions.",r:"EASL 2018 HCC guidelines; ACR LI-RADS"},
+{s:"C",l:"EN",t:"Hepatobiliary",q:"In Cambodia, Laos and Thailand, which parasite is a major risk factor for cholangiocarcinoma?",o:["Schistosoma haematobium","Opisthorchis viverrini","Ascaris lumbricoides","Taenia solium","Entamoeba histolytica"],a:1,e:"The liver fluke Opisthorchis viverrini, caught from raw fermented freshwater fish, is an IARC group 1 carcinogen for cholangiocarcinoma. Schistosoma haematobium is linked to bladder cancer.",r:"IARC Monographs vol. 100B"},
+{s:"C",l:"FR",t:"ORL",q:"Homme de 45 ans : adénopathie cervicale haute, otite séreuse unilatérale et épistaxis. La biopsie du cavum montre un carcinome indifférencié. Quel virus est associé ?",o:["HPV 16","Virus de l'hépatite B","HTLV-1","Virus d'Epstein-Barr","HHV-8"],a:3,e:"Le carcinome indifférencié du nasopharynx, fréquent en Asie du Sud-Est, est associé à l'EBV. L'ADN de l'EBV plasmatique sert au suivi.",r:"ESMO–EURACAN 2021 Nasopharyngeal carcinoma guideline"},
+{s:"C",l:"EN",t:"Head & neck",q:"What is the standard treatment for locoregionally advanced (stage III) nasopharyngeal carcinoma?",o:["Surgery alone","Radiotherapy alone","Concurrent cisplatin-based chemoradiotherapy, with or without induction chemotherapy","Immunotherapy alone","Observation"],a:2,e:"The nasopharynx is hard to reach surgically and the tumour is radiosensitive. Intensity-modulated radiotherapy with concurrent cisplatin, often after induction gemcitabine-cisplatin, is standard.",r:"ESMO–EURACAN 2021; CSCO/ASCO 2021 NPC guideline"},
+{s:"C",l:"FR",t:"Gynécologie",q:"Quels génotypes de papillomavirus humain sont responsables d'environ 70 % des cancers du col de l'utérus ?",o:["HPV 6 et 11","HPV 16 et 18","HPV 1 et 2","HPV 31 et 33 uniquement","HPV 5 et 8"],a:1,e:"HPV 16 et 18 sont les génotypes oncogènes majeurs. HPV 6 et 11 donnent les condylomes.",r:"WHO HPV vaccines position paper (2022)"},
+{s:"C",l:"EN",t:"Gynaecology",q:"What is the standard treatment for FIGO stage IIB squamous cell carcinoma of the cervix?",o:["Radical hysterectomy alone","Concurrent cisplatin chemoradiation plus brachytherapy","Chemotherapy alone","Cone biopsy","Palliative care only"],a:1,e:"Locally advanced disease (IB3–IVA) is treated with external beam radiotherapy and weekly cisplatin, followed by image-guided brachytherapy.",r:"ESGO/ESTRO/ESP 2023 Cervical cancer guideline; FIGO 2018"},
+{s:"C",l:"EN",t:"Screening",q:"For the general population of women, which primary cervical screening approach does WHO recommend?",o:["Pap smear every year from age 21","HPV DNA test from age 30, every 5–10 years","VIA every 6 months","Colposcopy every 3 years","No screening where vaccination exists"],a:1,e:"WHO 2021 recommends HPV DNA as the primary screening test from age 30, every 5–10 years. Women living with HIV should start at 25 and be screened every 3–5 years.",r:"WHO Guideline for screening and treatment of cervical pre-cancer lesions, 2nd ed. (2021)"},
+{s:"C",l:"EN",t:"Lung",q:"A non-smoking woman has metastatic lung adenocarcinoma with an EGFR exon 19 deletion. What is the preferred first-line treatment?",o:["Carboplatin–paclitaxel","Pembrolizumab alone","Osimertinib","Crizotinib","Best supportive care only"],a:2,e:"Osimertinib, a third-generation EGFR TKI, improves survival over earlier TKIs (FLAURA trial). EGFR mutations are common in Asian never-smokers. Crizotinib is for ALK or ROS1 rearrangements.",r:"ESMO 2023 Oncogene-addicted metastatic NSCLC guideline"},
+{s:"C",l:"FR",t:"Poumon",q:"Quel est le type histologique de cancer bronchique le plus fréquent chez le non-fumeur ?",o:["Carcinome épidermoïde","Adénocarcinome","Carcinome à petites cellules","Carcinome à grandes cellules","Tumeur carcinoïde typique"],a:1,e:"L'adénocarcinome prédomine chez les non-fumeurs, surtout les femmes asiatiques, souvent avec une mutation d'EGFR.",r:"WHO Classification of Thoracic Tumours, 5th ed."},
+{s:"C",l:"EN",t:"Colorectal",q:"After curative resection of a stage III (node-positive) colon adenocarcinoma, what is the standard adjuvant treatment?",o:["No further treatment","Oxaliplatin plus a fluoropyrimidine (CAPOX or FOLFOX)","Radiotherapy to the tumour bed","Bevacizumab alone","Tamoxifen"],a:1,e:"Adjuvant oxaliplatin-based chemotherapy reduces recurrence in stage III colon cancer. Three months of CAPOX is enough for low-risk T1–3 N1 disease (IDEA collaboration).",r:"ESMO 2020 Localised colon cancer guideline"},
+{s:"C",l:"FR",t:"Marqueurs tumoraux",q:"Quel marqueur tumoral est utilisé pour la surveillance après résection d'un cancer colorectal ?",o:["CA 125","Antigène carcino-embryonnaire (ACE)","Alpha-fœtoprotéine","PSA","Calcitonine"],a:1,e:"L'ACE est dosé régulièrement lors du suivi. Il n'est pas recommandé pour le dépistage ni pour le diagnostic.",r:"ESMO 2020 Localised colon cancer guideline"},
+{s:"C",l:"EN",t:"Tumour markers",q:"A 25-year-old man has a testicular mass. Histology shows pure seminoma, but serum AFP is clearly raised. What does this imply?",o:["Normal for seminoma","A non-seminomatous component is present, so manage as a non-seminoma","Liver metastases are certain","Choriocarcinoma is excluded","A laboratory error; ignore it"],a:1,e:"Pure seminoma does not secrete AFP. A raised AFP means non-seminomatous elements (e.g. yolk sac tumour), which changes treatment.",r:"ESMO 2022 Testicular seminoma and non-seminoma guideline"},
+{s:"C",l:"FR",t:"Endocrinologie",q:"Une calcitonine sérique très élevée chez un patient porteur d'un nodule thyroïdien évoque :",o:["Un carcinome papillaire","Un carcinome médullaire de la thyroïde","Un carcinome vésiculaire","Un lymphome thyroïdien","Une thyroïdite de Hashimoto"],a:1,e:"Le carcinome médullaire naît des cellules C sécrétant la calcitonine. Il faut rechercher une mutation RET (NEM 2). La thyroglobuline sert au suivi des cancers différenciés.",r:"ATA 2015 Medullary thyroid carcinoma guideline"},
+{s:"C",l:"EN",t:"Haematology",q:"A 65-year-old has back pain, anaemia, hypercalcaemia and renal impairment. Which initial test is most useful?",o:["Serum protein electrophoresis with immunofixation and serum free light chains","Bone scintigraphy","PSA","Blood film for blasts only","Coombs test"],a:0,e:"These CRAB features suggest multiple myeloma. Look for a monoclonal protein with SPEP, immunofixation and free light chains, then do a bone marrow biopsy. Bone scans often miss lytic myeloma lesions.",r:"IMWG 2014 criteria; ESMO 2021 Multiple myeloma guideline"},
+{s:"C",l:"FR",t:"Hématologie",q:"Quelle cellule caractérise le lymphome de Hodgkin classique à l'histologie ?",o:["Cellule de Sézary","Cellule de Reed-Sternberg (CD15+, CD30+)","Blaste myéloïde","Plasmocyte dystrophique","Cellule en étoile du ciel"],a:1,e:"La cellule de Reed-Sternberg, grande cellule binucléée CD15+ CD30+, est pathognomonique dans son contexte. Le « ciel étoilé » évoque le lymphome de Burkitt.",r:"WHO Classification of Haematolymphoid Tumours, 5th ed."},
+{s:"C",l:"EN",t:"Haematology",q:"Chronic myeloid leukaemia is caused by the Philadelphia chromosome t(9;22). What is the first-line targeted therapy?",o:["Rituximab","Imatinib (or another BCR-ABL tyrosine kinase inhibitor)","All-trans retinoic acid","Hydroxyurea alone for life","Bortezomib"],a:1,e:"The BCR-ABL1 fusion kinase is blocked by imatinib, dasatinib or nilotinib, with near-normal life expectancy in responders. ATRA is for acute promyelocytic leukaemia t(15;17).",r:"ELN 2020 CML recommendations"},
+{s:"C",l:"EN",t:"Performance status",q:"A patient with metastatic cancer is up and about more than 50% of waking hours and cares for himself, but cannot do any work. What is his ECOG performance status?",o:["0","1","2","3","4"],a:2,e:"ECOG 2: ambulatory and capable of all self-care, unable to work, up more than 50% of waking hours. Performance status strongly guides fitness for chemotherapy.",r:"ECOG-ACRIN Performance Status Scale"},
+{s:"C",l:"FR",t:"Soins palliatifs",q:"Patient sous morphine orale au long cours pour une douleur cancéreuse. Quel traitement doit être associé systématiquement ?",o:["Un laxatif","Un antihistaminique","Un inhibiteur de la pompe à protons","Une benzodiazépine","Une corticothérapie"],a:0,e:"La constipation induite par les opioïdes est constante et ne s'atténue pas avec le temps. Un laxatif doit être prescrit dès l'instauration.",r:"WHO Guidelines for cancer pain management in adults and adolescents (2018); ESMO 2018"},
+
+];
+
+/* Fixed (seeded) option shuffle so correct answers spread across A–E, identical on every load. */
+(function(){let seed=20261202;const rnd=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
+  Q.forEach(q=>{const idx=[0,1,2,3,4];for(let i=4;i>0;i--){const j=Math.floor(rnd()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]]}
+    q.o=idx.map(k=>q.o[k]);q.a=idx.indexOf(q.a)})})();
+
+/* ---------- APP ---------- */
+const SECTIONS={A:"Part A · Médecine (FR)",B:"Part B · Clinical & basic sciences (EN)",C:"Part C · Oncologie / Oncology (FR + EN)"};
+const LET="ABCDE";
+const KEY="des-onco-mock-v1";
+let S=load()||fresh();
+function fresh(){return{screen:"start",mode:"exam",mins:120,cur:0,ans:{},flag:{},left:null,started:null,gpa:"",filter:"all",confirm:false}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));return s&&s.screen?s:null}catch(e){return null}}
+const app=document.getElementById("app");
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let tick=null;
+
+function render(){
+  if(S.screen==="start")return renderStart();
+  if(S.screen==="exam")return renderExam();
+  return renderResults();
+}
+
+function counts(){const c={A:0,B:0,C:0};Q.forEach(q=>c[q.s]++);return c}
+
+function renderStart(){
+  const c=counts();
+  app.innerHTML=`
+  <div class="cover">
+    <div>
+      <div class="eyebrow">Unofficial practice · DES entrance · Oncologie</div>
+      <h1>DES Oncology Mock Exam</h1>
+      <p class="lede">A full-length practice paper built to feel like the University of Health Sciences DES selection exam: five-option single-best-answer MCQs and clinical cases, mixed French and English, pitched at a doctor applying for specialist training.</p>
+      <div class="facts">
+        <div><b>${Q.length}</b><span>questions (assumed length)</span></div>
+        <div><b>A–E</b><span>5 options, one best answer</span></div>
+        <div><b>FR + EN</b><span>languages, as in the official notice</span></div>
+        <div><b>80 / 20</b><span>exam score / GPA weighting</span></div>
+      </div>
+      <div class="blueprint">
+        <h3 style="font-size:19px;margin-bottom:8px">Paper blueprint</h3>
+        <table><tbody>
+          <tr><th>Part A · Médecine interne (French)</th><td class="n">${c.A}</td></tr>
+          <tr><th>Part B · Clinical & basic sciences (English)</th><td class="n">${c.B}</td></tr>
+          <tr><th>Part C · Oncology (French + English)</th><td class="n">${c.C}</td></tr>
+        </tbody></table>
+        <p class="note" style="margin-top:14px">The official 2026–27 notice does not publish the number of questions, the time limit or a topic breakdown. The length, timing and blueprint here are modelled on the UHS national exit-exam MCQ bank (French Parts A–B, English Part C) with an oncology section added for your specialty. The real exam also draws 35% of its questions from the UHS question bank given to applicants; this mock cannot reproduce those.</p>
+      </div>
+    </div>
+    <div class="panel" role="form" aria-label="Exam settings">
+      <div>
+        <label>Mode</label>
+        <div class="seg" id="mode">
+          <button id="m-exam" aria-pressed="${S.mode==="exam"}" data-m="exam">Exam: timed, marked at the end</button>
+          <button id="m-prac" aria-pressed="${S.mode==="practice"}" data-m="practice">Practice: see answers as you go</button>
+        </div>
+      </div>
+      <div>
+        <label>Time limit (exam mode)</label>
+        <div class="seg" id="mins">${[90,120,150,180].map(m=>`<button id="t-${m}" aria-pressed="${S.mins===m}" data-t="${m}">${m} min</button>`).join("")}</div>
+      </div>
+      <p class="note">Default is 120 minutes, about 72 seconds per question. The real timetable will be announced by UHS before 2–3 December 2026.</p>
+      <button class="btn" id="go">Start the paper</button>
+      ${Object.keys(S.ans).length?`<button class="btn ghost" id="resume">Resume where you left off (${Object.keys(S.ans).length} answered)</button>`:""}
+    </div>
+  </div>
+  <footer>Practice material written for revision. Not affiliated with or endorsed by the University of Health Sciences. Each answer cites the guideline it is based on; where Cambodian national protocols differ, follow the national protocol. Exam facts from the UHS DES 2026–27 announcement.</footer>`;
+  document.querySelectorAll("#mode button").forEach(b=>b.onclick=()=>{S.mode=b.dataset.m;save();render()});
+  document.querySelectorAll("#mins button").forEach(b=>b.onclick=()=>{S.mins=+b.dataset.t;save();render()});
+  document.getElementById("go").onclick=()=>{const m=S.mode,t=S.mins;S=fresh();S.mode=m;S.mins=t;S.screen="exam";S.left=t*60;S.started=Date.now();save();render()};
+  const r=document.getElementById("resume"); if(r)r.onclick=()=>{S.screen="exam";if(S.left==null)S.left=S.mins*60;save();render()};
+}
+
+function fmt(s){s=Math.max(0,s|0);const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return (h?h+":":"")+String(m).padStart(2,"0")+":"+String(x).padStart(2,"0")}
+
+function renderExam(){
+  const q=Q[S.cur],i=S.cur,chosen=S.ans[i],prac=S.mode==="practice",locked=prac&&chosen!=null;
+  const answered=Object.keys(S.ans).length;
+  app.innerHTML=`
+  <div class="topbar">
+    <div><div class="eyebrow">${prac?"Practice mode":"Exam mode"}</div><div class="progress">${answered} / ${Q.length} answered</div></div>
+    ${prac?"":`<div class="timer" id="timer" aria-live="off">${fmt(S.left)}</div>`}
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn ghost" id="quit">Save & exit</button>
+      <button class="btn" id="submit">Submit paper</button>
+    </div>
+  </div>
+  ${S.confirm?`<div class="confirm" role="alertdialog" aria-label="Confirm submission"><span><b>Submit now?</b> ${Q.length-answered} unanswered, ${Object.keys(S.flag).filter(k=>S.flag[k]).length} flagged. You cannot change answers afterwards.</span><button class="btn" id="yes">Submit</button><button class="btn ghost" id="no">Keep working</button></div>`:""}
+  <div class="exam">
+    <div>
+      <article class="qcard">
+        <div class="qmeta"><span class="qnum">Question ${i+1}</span><span class="chip">${esc(SECTIONS[q.s])}</span><span class="chip lang">${q.l}</span>${q.t?`<span class="chip">${esc(q.t)}</span>`:""}</div>
+        <div class="stem">${esc(q.q)}</div>
+        <div class="opts" role="radiogroup" aria-label="Answer options">
+          ${q.o.map((o,k)=>{let cls="";if(locked){if(k===q.a)cls="correct";else if(k===chosen)cls="wrong"}
+            return `<button class="opt ${cls}" id="opt-${k}" role="radio" aria-checked="${chosen===k}" data-k="${k}" ${locked?"disabled":""}><span class="bub">${LET[k]}</span><span>${esc(o)}</span></button>`}).join("")}
+        </div>
+        ${locked?`<div class="explain"><b>${chosen===q.a?"Correct.":"Answer: "+LET[q.a]+"."}</b> ${esc(q.e)}<div class="src">Source: ${esc(q.r)}</div></div>`:""}
+        <div class="qnav">
+          <button class="btn ghost" id="prev" ${i===0?"disabled":""}>← Previous</button>
+          <button class="btn ghost flagbtn" id="flag" aria-pressed="${!!S.flag[i]}">${S.flag[i]?"Flagged":"Flag for review"}</button>
+          <button class="btn ghost" id="next" ${i===Q.length-1?"disabled":""}>Next →</button>
+        </div>
+      </article>
+    </div>
+    <aside class="sheetbox" aria-label="Answer sheet">
+      <h3>Answer sheet</h3>
+      <div class="legend"><span><i style="background:var(--ink)"></i>answered</span><span><i style="background:var(--flag)"></i>flagged</span><span><i style="border:1px solid var(--line)"></i>blank</span></div>
+      ${["A","B","C"].map(sec=>`<div class="secl">${esc(SECTIONS[sec])}</div><div class="grid">${Q.map((qq,j)=>qq.s!==sec?"":`<button class="cell ${S.ans[j]!=null?"ans":""} ${S.flag[j]?"flag":""} ${j===i?"cur":""}" data-j="${j}" aria-label="Question ${j+1}${S.ans[j]!=null?", answered "+LET[S.ans[j]]:""}">${j+1}</button>`).join("")}</div>`).join("")}
+    </aside>
+  </div>`;
+  document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{if(locked)return;S.ans[i]=+b.dataset.k;save();render()});
+  document.querySelectorAll(".cell").forEach(b=>b.onclick=()=>{S.cur=+b.dataset.j;save();render();window.scrollTo({top:0})});
+  document.getElementById("prev").onclick=()=>{S.cur--;save();render()};
+  document.getElementById("next").onclick=()=>{S.cur++;save();render()};
+  document.getElementById("flag").onclick=()=>{S.flag[i]=!S.flag[i];save();render()};
+  document.getElementById("quit").onclick=()=>{S.screen="start";S.confirm=false;save();render()};
+  document.getElementById("submit").onclick=()=>{S.confirm=true;render();window.scrollTo({top:0})};
+  const y=document.getElementById("yes"); if(y)y.onclick=finish;
+  const n=document.getElementById("no"); if(n)n.onclick=()=>{S.confirm=false;render()};
+  startTick();
+}
+
+function startTick(){
+  clearInterval(tick);
+  if(S.mode!=="exam"||S.screen!=="exam")return;
+  tick=setInterval(()=>{S.left--;const t=document.getElementById("timer");if(t){t.textContent=fmt(S.left);t.classList.toggle("low",S.left<600)}
+    if(S.left%10===0)save();if(S.left<=0)finish()},1000);
+}
+
+function finish(){clearInterval(tick);S.screen="results";S.confirm=false;S.filter="all";save();render();window.scrollTo({top:0})}
+
+function renderResults(){
+  const tot={A:[0,0],B:[0,0],C:[0,0]};let right=0,skipped=0;
+  Q.forEach((q,j)=>{tot[q.s][1]++;if(S.ans[j]===q.a){tot[q.s][0]++;right++}else if(S.ans[j]==null)skipped++});
+  const pct=Math.round(right/Q.length*100);
+  const g=parseFloat(S.gpa);const gOk=!isNaN(g)&&g>=0&&g<=4;
+  const combined=gOk?(pct*0.8+(g/4*100)*0.2).toFixed(1):null;
+  const used=S.mode==="exam"&&S.left!=null?fmt(S.mins*60-S.left):"—";
+  const list=Q.map((q,j)=>({q,j,st:S.ans[j]==null?"skip":S.ans[j]===q.a?"ok":"bad"})).filter(x=>S.filter==="all"||x.st===S.filter||(S.filter==="flag"&&S.flag[x.j])||(S.filter.length===1&&x.q.s===S.filter));
+  app.innerHTML=`
+  <div class="eyebrow">Results</div>
+  <h1 style="font-size:clamp(30px,4.5vw,44px);margin-top:8px">${right} / ${Q.length} correct</h1>
+  <p class="muted">${pct}% · ${skipped} unanswered · time used ${used} of ${S.mode==="exam"?S.mins+" min":"untimed practice"}</p>
+  <div class="score">
+    ${["A","B","C"].map(s=>{const p=tot[s][1]?Math.round(tot[s][0]/tot[s][1]*100):0;return `<div><span>${esc(SECTIONS[s])}</span><b>${tot[s][0]}/${tot[s][1]}</b><div class="bar"><i style="width:${p}%"></i></div></div>`}).join("")}
+    <div><span>Estimated selection score (80% exam + 20% GPA)</span><b>${combined??"—"}</b>
+      <div class="gpa"><label for="gpa" style="font-size:12.5px">Your GPA /4.0</label><input id="gpa" inputmode="decimal" value="${esc(S.gpa)}" placeholder="3.2"></div></div>
+  </div>
+  <p class="note" style="margin-top:14px">Places are awarded by rank within each specialty (Oncology: 25 places in 2026–27), so there is no fixed pass mark. Use your part scores to decide what to revise next.</p>
+  <div class="filters seg" id="filters">
+    ${[["all","All"],["bad","Wrong"],["skip","Unanswered"],["flag","Flagged"],["ok","Correct"],["A","Part A"],["B","Part B"],["C","Part C"]].map(([k,l])=>`<button aria-pressed="${S.filter===k}" data-f="${k}">${l}</button>`).join("")}
+  </div>
+  <div class="review">
+    ${list.map(({q,j,st})=>`<article class="rv ${st}">
+      <div class="qmeta"><span class="qnum">Q${j+1}</span><span class="chip">${esc(SECTIONS[q.s])}</span><span class="chip lang">${q.l}</span>${S.flag[j]?`<span class="chip" style="color:var(--flag);border-color:var(--flag)">flagged</span>`:""}</div>
+      <div class="stem">${esc(q.q)}</div>
+      <ol>${q.o.map((o,k)=>`<li class="${k===q.a?"c":(k===S.ans[j]?"y":"")}">${LET[k]}. ${esc(o)}${k===S.ans[j]?" ← your answer":""}</li>`).join("")}</ol>
+      <div class="explain">${esc(q.e)}<div class="src">Source: ${esc(q.r)}</div></div>
+    </article>`).join("")||`<p class="muted">Nothing in this filter.</p>`}
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px">
+    <button class="btn" id="again">Start a new attempt</button>
+  </div>
+  <footer>Unofficial practice paper, not affiliated with the University of Health Sciences. Check anything that looks wrong against the cited guideline.</footer>`;
+  document.querySelectorAll("#filters button").forEach(b=>b.onclick=()=>{S.filter=b.dataset.f;save();render()});
+  const gi=document.getElementById("gpa");gi.onchange=()=>{S.gpa=gi.value.trim();save();render()};
+  document.getElementById("again").onclick=()=>{const m=S.mode,t=S.mins;S=fresh();S.mode=m;S.mins=t;save();render()};
+}
+
+render();
+</script>
+</body>
+</html>
