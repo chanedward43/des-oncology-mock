@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Unofficial DES entrance practice exam (Cambodia): a new 100-question French/English paper each attempt, all specialties.">
+<meta name="description" content="UHS DES mock exam practice">
 <title>DES Mock Exam</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -164,6 +164,13 @@ footer{margin-top:40px;font-size:12.5px;color:var(--muted);max-width:80ch}
 .hist{display:grid;gap:4px}
 .hist div{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:baseline;font-size:13px;padding:6px 10px;border:1px solid var(--line);border-radius:6px}
 .hist b{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.histrow{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid var(--line);background:transparent;border-radius:6px;padding:9px 12px;cursor:pointer;font-size:13.5px}
+.histrow:hover{border-color:var(--ink)}
+.histrow>span:first-child{display:grid;gap:2px}
+.histrow .muted{font-size:12px}
+.hscore{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.linkbtn{background:none;border:0;padding:6px 0;color:var(--ink);text-decoration:underline;cursor:pointer;font-size:13px}
+.savedbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:16px}
 .blueprint thead th,.blueprint thead td{font-size:12px;color:var(--muted);font-weight:600}
 [hidden]{display:none!important}
 img{max-width:100%}
@@ -503,7 +510,10 @@ const GROUPS=[
 ];
 const GNAME=Object.fromEntries(GROUPS.map(g=>[g.k,g]));
 const LET="ABCDE";
-const KEY="des-mock-general-v2";
+const KEY="des-mock-general-v2", PKEY="des-mock-papers-v1", PMAX=15;
+function loadPapers(){try{const a=JSON.parse(localStorage.getItem(PKEY));return Array.isArray(a)?a:[]}catch(e){return []}}
+function savePapers(a){try{localStorage.setItem(PKEY,JSON.stringify(a));return true}catch(e){return false}}
+let PAPERS=loadPapers();
 const app=document.getElementById("app");
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 let tick=null;
@@ -534,7 +544,12 @@ function load(){try{const s=JSON.parse(localStorage.getItem(KEY));return s&&s.sc
 
 const item=j=>{const p=S.paper[j],q=Q[p.i];return{q,opts:p.ord.map(k=>q.o[k]),correct:p.ord.indexOf(q.a)}};
 
-function render(){ if(S.screen==="start")return renderStart(); if(S.screen==="exam")return renderExam(); return renderResults(); }
+function render(){
+  if(S.screen==="start")return renderStart();
+  if(S.screen==="exam")return renderExam();
+  if(S.screen==="review"){const P=PAPERS.find(x=>x.id===S.reviewId);if(P)return renderResults(P,true);S.screen="start";return renderStart()}
+  return renderResults(S,false);
+}
 
 function bankCounts(){const c={};GROUPS.forEach(g=>c[g.k]=pool(g.k).length);return c}
 
@@ -580,7 +595,9 @@ function renderStart(){
       <p class="note">About ${per} seconds per question. The real timetable will be announced by UHS before the exam on 2–3 December 2026.</p>
       <button class="btn" id="go">Deal a new paper</button>
       ${inProgress?`<button class="btn ghost" id="resume">Resume paper ${S.attempt} (${Object.keys(S.ans).length} answered)</button>`:""}
-      ${S.history.length?`<div><label>Your previous papers</label><div class="hist">${S.history.slice(-6).reverse().map(h=>`<div><span>Paper ${h.n}</span><b>${h.score}/${h.len}</b><span class="muted">${h.date}</span></div>`).join("")}</div></div>`:""}
+      ${PAPERS.length?`<div><label>Your previous papers</label><div class="hist">${PAPERS.slice().reverse().map(h=>`<button class="histrow" data-id="${esc(h.id)}"><span><b>Paper ${h.n}</b><span class="muted">${esc(h.date)} · ${h.mode==="exam"?"exam":"practice"}</span></span><span class="hscore">${h.score}/${h.len} <span class="muted">(${Math.round(h.score/h.len*100)}%)</span></span></button>`).join("")}</div>
+        <p class="muted" style="font-size:12.5px;margin:6px 0 0">Tap a paper to review every question, your answer and the correct answer. Last ${PMAX} papers are saved in this browser.</p>
+        <button class="linkbtn" id="clearp">Clear saved papers</button></div>`:(S.history.length?`<div><label>Your previous papers</label><div class="hist">${S.history.slice(-6).reverse().map(h=>`<div><span>Paper ${h.n}</span><b>${h.score}/${h.len}</b><span class="muted">${h.date}</span></div>`).join("")}</div><p class="muted" style="font-size:12.5px">Papers finished from now on can be reopened with your answers.</p></div>`:"")}
       <p class="muted" style="font-size:12.5px;margin:0">${(S.seen||[]).length} of ${Q.length} bank questions seen so far. New papers favour questions you haven't seen.</p>
     </div>
   </div>
@@ -592,6 +609,8 @@ function renderStart(){
     const keep={mode:S.mode,mins:S.mins,len:S.len,attempt:S.attempt+1,seen:S.seen,history:S.history,gpa:S.gpa};
     S=Object.assign(fresh(),keep);S.paper=newPaper(S.len);S.screen="exam";S.left=S.mins*60;S.done=false;save();render();window.scrollTo({top:0})};
   const r=document.getElementById("resume"); if(r)r.onclick=()=>{S.screen="exam";save();render()};
+  document.querySelectorAll(".histrow").forEach(b=>b.onclick=()=>{S.reviewId=b.dataset.id;S.filter="all";S.screen="review";save();render();window.scrollTo({top:0})});
+  const cp=document.getElementById("clearp");if(cp)cp.onclick=()=>{if(cp.dataset.armed){PAPERS=[];savePapers(PAPERS);render()}else{cp.dataset.armed="1";cp.textContent="Tap again to delete all saved papers"}};
 }
 
 function fmt(s){s=Math.max(0,s|0);const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return (h?h+":":"")+String(m).padStart(2,"0")+":"+String(x).padStart(2,"0")}
@@ -659,24 +678,31 @@ function finish(){
   const r=score(), d=new Date();
   S.seen=[...new Set((S.seen||[]).concat(S.paper.map(p=>p.i)))];
   S.history=(S.history||[]).concat([{n:S.attempt,score:r,len:S.paper.length,date:d.toLocaleDateString()}]).slice(-30);
+  const snap={id:String(Date.now()),n:S.attempt,score:r,len:S.paper.length,mode:S.mode,mins:S.mins,left:S.left,
+    date:d.toLocaleDateString()+" "+d.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}),
+    paper:S.paper.map(p=>({i:p.i,ord:p.ord,k:Q[p.i].q.slice(0,40)})),ans:S.ans,flag:S.flag};
+  PAPERS=PAPERS.concat([snap]).slice(-PMAX);
+  while(!savePapers(PAPERS)&&PAPERS.length>1)PAPERS=PAPERS.slice(1);
   S.screen="results";S.confirm=false;S.filter="all";S.done=true;save();render();window.scrollTo({top:0})
 }
 
-function renderResults(){
-  const tot={};GROUPS.forEach(g=>tot[g.k]=[0,0]);let right=0,skipped=0;
-  const rows=S.paper.map((p,j)=>{const q=Q[p.i],c=p.ord.indexOf(q.a),a=S.ans[j];tot[q.g][1]++;
+function renderResults(R,saved){
+  R=R||S;const ANS=R.ans||{},FLAG=R.flag||{};
+  const tot={};GROUPS.forEach(g=>tot[g.k]=[0,0]);let right=0,skipped=0,missing=0;
+  const rows=R.paper.filter(p=>{const ok=Q[p.i]&&(!p.k||Q[p.i].q.slice(0,40)===p.k);if(!ok)missing++;return ok}).map((p)=>{const j=R.paper.indexOf(p);const q=Q[p.i],c=p.ord.indexOf(q.a),a=ANS[j];tot[q.g][1]++;
     const st=a==null?"skip":a===c?"ok":"bad"; if(st==="ok"){tot[q.g][0]++;right++} if(st==="skip")skipped++;
     return {q,p,j,c,a,st}});
-  const n=S.paper.length,pct=Math.round(right/n*100);
+  const n=R.paper.length,pct=Math.round(right/n*100);
   const g=parseFloat(S.gpa);const gOk=!isNaN(g)&&g>=0&&g<=4;
   const combined=gOk?(pct*0.8+(g/4*100)*0.2).toFixed(1):null;
-  const used=S.mode==="exam"&&S.left!=null?fmt(S.mins*60-S.left):"—";
+  const used=R.mode==="exam"&&R.left!=null?fmt(R.mins*60-R.left):"—";
   const weak=GROUPS.filter(x=>tot[x.k][1]).map(x=>({x,p:tot[x.k][0]/tot[x.k][1]})).sort((a,b)=>a.p-b.p).slice(0,2);
-  const list=rows.filter(x=>S.filter==="all"||x.st===S.filter||(S.filter==="flag"&&S.flag[x.j])||(GNAME[S.filter]&&x.q.g===S.filter));
+  const list=rows.filter(x=>S.filter==="all"||x.st===S.filter||(S.filter==="flag"&&FLAG[x.j])||(GNAME[S.filter]&&x.q.g===S.filter));
   app.innerHTML=`
-  <div class="eyebrow">Paper ${S.attempt} · results</div>
+  ${saved?`<div class="savedbar"><button class="btn ghost" id="back">← Back to start</button><span class="muted">Saved paper · ${esc(R.date)}</span></div>`:""}
+  <div class="eyebrow">Paper ${R.n??R.attempt} · ${saved?"review":"results"}</div>
   <h1 style="font-size:clamp(30px,4.5vw,44px);margin-top:8px">${right} / ${n} correct</h1>
-  <p class="muted">${pct}% · ${skipped} unanswered · time used ${used} of ${S.mode==="exam"?S.mins+" min":"untimed practice"}</p>
+  <p class="muted">${pct}% · ${skipped} unanswered · time used ${used} of ${R.mode==="exam"?R.mins+" min":"untimed practice"}${missing?` · ${missing} question(s) no longer in the bank`:""}${saved?"":" · saved under Your previous papers"}</p>
   <div class="score">
     ${GROUPS.filter(x=>tot[x.k][1]).map(x=>{const p=Math.round(tot[x.k][0]/tot[x.k][1]*100);return `<div><span>${esc(x.n)}</span><b>${tot[x.k][0]}/${tot[x.k][1]}</b><div class="bar"><i style="width:${p}%"></i></div></div>`}).join("")}
     <div><span>Estimated selection score (80% exam + 20% GPA)</span><b>${combined??"—"}</b>
@@ -688,22 +714,23 @@ function renderResults(){
   </div>
   <div class="review">
     ${list.map(({q,p,j,c,a,st})=>`<article class="rv ${st}">
-      <div class="qmeta"><span class="qnum">Q${j+1}</span><span class="chip">${esc(GNAME[q.g].n)}</span><span class="chip lang">${q.l}</span>${q.t?`<span class="chip">${esc(q.t)}</span>`:""}${S.flag[j]?`<span class="chip" style="color:var(--flag);border-color:var(--flag)">flagged</span>`:""}</div>
+      <div class="qmeta"><span class="qnum">Q${j+1}</span><span class="chip">${esc(GNAME[q.g].n)}</span><span class="chip lang">${q.l}</span>${q.t?`<span class="chip">${esc(q.t)}</span>`:""}${FLAG[j]?`<span class="chip" style="color:var(--flag);border-color:var(--flag)">flagged</span>`:""}</div>
       <div class="stem">${esc(q.q)}</div>
-      <ol>${p.ord.map((k,x)=>`<li class="${x===c?"c":(x===a?"y":"")}">${LET[x]}. ${esc(q.o[k])}${x===a?" ← your answer":""}</li>`).join("")}</ol>
+      <ol>${p.ord.map((k,x)=>`<li class="${x===c?"c":(x===a?"y":"")}">${LET[x]}. ${esc(q.o[k])}${x===a?" ← your answer":""}</li>`).join("")}</ol>${a==null?`<p class="muted" style="margin:6px 0 0;font-size:13px">You didn't answer this question.</p>`:""}
       <div class="explain">${esc(q.e)}<div class="src">Source: ${esc(q.r)}</div></div>
     </article>`).join("")||`<p class="muted">Nothing in this filter.</p>`}
   </div>
   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px">
-    <button class="btn" id="again">Deal a new paper</button>
-    <button class="btn ghost" id="home">Back to start</button>
+    ${saved?"":`<button class="btn" id="again">Deal a new paper</button>`}
+    <button class="btn ${saved?"":"ghost"}" id="home">Back to start</button>
   </div>
   <footer>Unofficial practice paper, not affiliated with the University of Health Sciences. Check anything that looks wrong against the cited guideline.</footer>`;
   document.querySelectorAll("#filters button").forEach(b=>b.onclick=()=>{S.filter=b.dataset.f;save();render()});
   const gi=document.getElementById("gpa");gi.onchange=()=>{S.gpa=gi.value.trim();save();render()};
-  document.getElementById("again").onclick=()=>{const keep={mode:S.mode,mins:S.mins,len:S.len,attempt:S.attempt+1,seen:S.seen,history:S.history,gpa:S.gpa};
+  const bk=document.getElementById("back");if(bk)bk.onclick=()=>{S.screen="start";S.reviewId=null;save();render();window.scrollTo({top:0})};
+  const ag=document.getElementById("again");if(ag)ag.onclick=()=>{const keep={mode:S.mode,mins:S.mins,len:S.len,attempt:S.attempt+1,seen:S.seen,history:S.history,gpa:S.gpa};
     S=Object.assign(fresh(),keep);S.paper=newPaper(S.len);S.screen="exam";S.left=S.mins*60;S.done=false;save();render();window.scrollTo({top:0})};
-  document.getElementById("home").onclick=()=>{S.screen="start";save();render()};
+  document.getElementById("home").onclick=()=>{S.screen="start";S.reviewId=null;save();render();window.scrollTo({top:0})};
 }
 
 if(S.screen==="exam"&&(!S.paper||!S.paper.length))S.screen="start";
