@@ -120,10 +120,40 @@ button{font:inherit;color:inherit}
 .rv li.c{background:var(--ok-soft);color:var(--ink);font-weight:600}
 .rv li.y{background:var(--bad-soft)}
 .confirm{background:var(--flag-soft);border:1px solid var(--flag);border-radius:8px;padding:14px;margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+
+/* Tablets and touch screens */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+input,select,textarea{font-size:16px}
+button{touch-action:manipulation}
+@media (pointer:coarse){
+  .btn{min-height:44px}
+  .seg button{min-height:40px;padding-inline:14px}
+  select{min-height:44px}
+  .pick,.opt{min-height:48px}
+  .pick input{width:20px;height:20px}
+  .cell{height:44px;font-size:13px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:6px}
+  .check .score button{width:44px;height:40px}
+  .histrow{min-height:52px}
+  .linkbtn{padding:8px 0}
+  .modecard{padding:16px}
+}
+@media (hover:none){.opt:hover{border-color:var(--line)}.btn:hover{filter:none}}
+
+/* keep the answer sheet beside the question on tablets */
+@media (min-width:700px) and (max-width:1000px){
+  .exam{grid-template-columns:minmax(0,1fr) 250px!important;gap:20px}
+  .sheetbox{position:sticky!important;max-height:calc(100vh - 90px)!important}
+  .stem{font-size:19px}
+}
+.gpa input{font-size:16px}
+@media (max-width:1000px){.qcard .qnav{display:grid;grid-template-columns:1fr 1fr;gap:10px}.qcard .qnav #next{order:1}.qcard .qnav .flagbtn{grid-column:1/-1;order:2}}
 footer{margin-top:40px;font-size:12.5px;color:var(--muted);max-width:80ch}
 
 @media (max-width:860px){
   .cover{grid-template-columns:1fr}
+}
+@media (max-width:699px){
   .exam{grid-template-columns:1fr}
   .sheetbox{position:static;max-height:none}
   .stem{font-size:18px}
