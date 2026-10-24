@@ -643,6 +643,8 @@ function renderStart(){
   const cp=document.getElementById("clearp");if(cp)cp.onclick=()=>{if(cp.dataset.armed){PAPERS=[];savePapers(PAPERS);render()}else{cp.dataset.armed="1";cp.textContent="Tap again to delete all saved papers"}};
 }
 
+function retryBtns(skipped,rows){const wrong=rows.filter(x=>x.st==="bad").length;
+  return `${skipped?`<button class="btn" data-act="retry" data-w="skip">Retry ${skipped} unanswered in practice mode</button>`:""}${wrong?`<button class="btn ghost" data-act="retry" data-w="bad">Retry ${wrong} wrong in practice mode</button>`:""}`}
 function fmtN(n){return n.toLocaleString("en-US")}
 function fmt(s){s=Math.max(0,s|0);const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return (h?h+":":"")+String(m).padStart(2,"0")+":"+String(x).padStart(2,"0")}
 
@@ -730,7 +732,7 @@ function renderResults(R,saved){
   const weak=GROUPS.filter(x=>tot[x.k][1]).map(x=>({x,p:tot[x.k][0]/tot[x.k][1]})).sort((a,b)=>a.p-b.p).slice(0,2);
   const list=rows.filter(x=>S.filter==="all"||x.st===S.filter||(S.filter==="flag"&&FLAG[x.j])||(GNAME[S.filter]&&x.q.g===S.filter));
   app.innerHTML=`
-  ${saved?`<div class="savedbar"><button class="btn ghost" id="back">← Back to start</button><span class="muted">Saved paper · ${esc(R.date)}</span></div>`:""}
+  <div class="savedbar"><button class="btn ghost" data-act="home">← Back to start</button>${retryBtns(skipped,rows)}${saved?`<span class="muted">Saved paper · ${esc(R.date)}</span>`:""}</div>
   <div class="eyebrow">Paper ${R.n??R.attempt} · ${saved?"review":"results"}</div>
   <h1 style="font-size:clamp(30px,4.5vw,44px);margin-top:8px">${right} / ${n} correct</h1>
   <p class="muted">${pct}% · ${skipped} unanswered · time used ${used} of ${R.mode==="exam"?R.mins+" min":"untimed practice"}${missing?` · ${missing} question(s) no longer in the bank`:""}${saved?"":" · saved under Your previous papers"}</p>
@@ -752,16 +754,20 @@ function renderResults(R,saved){
     </article>`).join("")||`<p class="muted">Nothing in this filter.</p>`}
   </div>
   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px">
+    ${retryBtns(skipped,rows)}
     ${saved?"":`<button class="btn" id="again">Deal a new paper</button>`}
-    <button class="btn ${saved?"":"ghost"}" id="home">Back to start</button>
+    <button class="btn ghost" data-act="home">← Back to start</button>
   </div>
   <footer>Unofficial practice paper, not affiliated with the University of Health Sciences. Check anything that looks wrong against the cited guideline.</footer>`;
   document.querySelectorAll("#filters button").forEach(b=>b.onclick=()=>{S.filter=b.dataset.f;save();render()});
   const gi=document.getElementById("gpa");gi.onchange=()=>{S.gpa=gi.value.trim();save();render()};
-  const bk=document.getElementById("back");if(bk)bk.onclick=()=>{S.screen="start";S.reviewId=null;save();render();window.scrollTo({top:0})};
+  document.querySelectorAll('[data-act="home"]').forEach(b=>b.onclick=()=>{S.screen="start";S.reviewId=null;save();render();window.scrollTo({top:0})});
+  document.querySelectorAll('[data-act="retry"]').forEach(b=>b.onclick=()=>{const want=b.dataset.w;
+    const items=rows.filter(x=>want==="skip"?x.st==="skip":x.st==="bad").map(x=>({i:x.p.i,ord:x.p.ord}));if(!items.length)return;
+    const keep={mode:"practice",mins:S.mins,len:S.len,attempt:S.attempt+1,seen:S.seen,history:S.history,gpa:S.gpa,src:S.src||"bank",subj:S.subj||"ALL"};
+    S=Object.assign(fresh(),keep);S.paper=items;S.screen="exam";S.left=S.mins*60;S.done=false;save();render();window.scrollTo({top:0})});
   const ag=document.getElementById("again");if(ag)ag.onclick=()=>{const keep={mode:S.mode,mins:S.mins,len:S.len,attempt:S.attempt+1,seen:S.seen,history:S.history,gpa:S.gpa,src:S.src||"bank",subj:S.subj||"ALL"};
     S=Object.assign(fresh(),keep);S.paper=newPaper(S.len);S.screen="exam";S.left=S.mins*60;S.done=false;save();render();window.scrollTo({top:0})};
-  document.getElementById("home").onclick=()=>{S.screen="start";S.reviewId=null;save();render();window.scrollTo({top:0})};
 }
 
 if(S.screen==="exam"&&(!S.paper||!S.paper.length))S.screen="start";
